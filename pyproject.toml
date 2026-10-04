@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "claimcheck"
+version = "0.2.1"
+description = "Claim-aware detection of hidden telemetry in desktop apps (privacy-washing checker)"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["privacy", "telemetry", "tracking", "audit", "mitmproxy", "open-source"]
+dependencies = [
+    "typer>=0.12",
+    "rich>=13",
+    "PyYAML>=6",
+    "requests>=2.31",
+    "psutil>=5.9",
+    "dnspython>=2.4",
+]
+
+[project.optional-dependencies]
+capture = ["mitmproxy>=10"]
+dev = ["pytest>=8", "pytest-cov>=5", "ruff>=0.5", "bandit>=1.7"]
+
+[project.scripts]
+claimcheck = "claimcheck.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+claimcheck = ["data/*.yaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = ["integration: needs a real mitmproxy (run with CLAIMCHECK_INTEGRATION=1)"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "S", "UP", "SIM"]
+ignore = ["S101", "S603", "S607", "B008", "E501", "SIM105", "SIM108"]  # SIM105/108 are style-only: explicit try/except is clearer for best-effort code
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S", "B", "SIM"]
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv"]

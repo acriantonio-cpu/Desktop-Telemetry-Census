@@ -1,0 +1,145 @@
+# Catalogue of candidate apps to test. It is a STARTING POINT, not a verdict on any product:
+# entries describe public claims to *verify*, never accusations. `status`:
+#   verified_claim : the public claim / telemetry documentation was read on `verify_at` (Sept 2026)
+#   to_verify      : plausible candidate; read the claims yourself before testing (see docs/10-choosing-apps.md)
+# exe_name values are hints: confirm the real process name in Task Manager > Details before using.
+version: 1
+roles:
+  synthetic_control: "Built-in app with KNOWN behaviour: validates the tool itself (ground truth = the script)."
+  control_negative: "Telemetry is documented and expected: the tool SHOULD detect it (checks recall)."
+  control_positive: "Product/build documented as telemetry-free or opt-in: the tool SHOULD stay quiet (checks false positives)."
+  claim_test: "Public privacy/local-first claims to confront with behaviour (the real research question)."
+apps:
+  - slug: canary
+    name: ClaimCheck Canary
+    tier: A
+    role: synthetic_control
+    stack: python
+    homepage: ""
+    repo_url: ""
+    exe_name: python.exe
+    first_party_domains: [canary-app.example]
+    documents:
+      - {type: file, location: "../benchmark/canary_claims.md", role: readme}
+      - {type: file, location: "../benchmark/canary_policy.md", role: privacy_policy}
+    why: "Four behaviours (clean / telemetry / optout-respected / optout-ignored) with known ground truth. Run this FIRST: if the tool cannot get these right, do not trust it on real apps."
+    how: "python -m claimcheck.canary --help ; see docs/10-choosing-apps.md section 'Canary'"
+    status: verified_claim
+    verify_at: "benchmark/canary_claims.md"
+
+  - slug: vscodium
+    name: VSCodium
+    tier: A
+    role: control_positive
+    stack: electron
+    homepage: https://vscodium.com
+    repo_url: https://github.com/VSCodium/vscodium
+    exe_name: VSCodium.exe
+    first_party_domains: [vscodium.com]
+    allowed_domains: [open-vsx.org, github.com, githubusercontent.com]
+    documents:
+      - {type: url, location: "https://github.com/VSCodium/vscodium", role: readme}
+    claims_summary: "Community build of the VS Code sources without Microsoft's telemetry; README states telemetry is disabled."
+    why: "Same codebase as VS Code but built without Microsoft's customisations: ideal PAIRED control with 'vscode'. Expect no Microsoft telemetry endpoints; extension marketplace/update traffic is normal."
+    status: verified_claim
+    verify_at: https://github.com/VSCodium/vscodium
+
+  - slug: vscode
+    name: Visual Studio Code
+    tier: A
+    role: control_negative
+    stack: electron
+    homepage: https://code.visualstudio.com
+    repo_url: https://github.com/microsoft/vscode
+    exe_name: Code.exe
+    first_party_domains: [visualstudio.com, microsoft.com, vsassets.io]
+    allowed_domains: [github.com, githubusercontent.com]
+    documents:
+      - {type: url, location: "https://code.visualstudio.com/docs/configure/telemetry", role: privacy_policy}
+    claims_summary: "Microsoft's official build ships telemetry with user-facing switches (per VSCodium's README and Microsoft docs)."
+    why: "Documented telemetry, configurable: tests recall and the opt-out phase (set telemetry.telemetryLevel to off). Note: the microsoft/vscode repo builds a clean OSS build; the *release* has extra product.json settings, so 'open_source' comparisons will differ by design."
+    status: to_verify
+    verify_at: https://code.visualstudio.com/docs/configure/telemetry
+
+  - slug: jan
+    name: Jan
+    tier: A
+    role: claim_test
+    stack: tauri
+    homepage: https://jan.ai
+    repo_url: https://github.com/janhq/jan
+    exe_name: Jan.exe
+    first_party_domains: [jan.ai, menlo.ai]
+    allowed_domains: [huggingface.co, hf.co, github.com]
+    documents:
+      - {type: url, location: "https://jan.ai/docs/privacy", role: privacy_policy}
+      - {type: url, location: "https://github.com/janhq/jan", role: readme}
+    claims_summary: "Local AI assistant marketed as running 100% offline; docs say analytics are opt-in and handled by PostHog (EU)."
+    why: "Textbook privacy claim + disclosed opt-in analytics. Test: nothing before consent, PostHog only after opting in, nothing after opting out, no chat content in payloads. Model downloads (Hugging Face) are expected traffic. Note: sources disagree on the licence (AGPL vs Apache): check the repo."
+    status: verified_claim
+    verify_at: https://jan.ai/docs/privacy
+
+  - slug: gpt4all
+    name: GPT4All
+    tier: A
+    role: claim_test
+    stack: qt
+    homepage: https://www.nomic.ai/gpt4all
+    repo_url: https://github.com/nomic-ai/gpt4all
+    exe_name: chat.exe
+    first_party_domains: [nomic.ai, gpt4all.io]
+    allowed_domains: [huggingface.co, github.com]
+    documents:
+      - {type: url, location: "https://www.nomic.ai/gpt4all", role: homepage}
+      - {type: url, location: "https://github.com/nomic-ai/gpt4all", role: readme}
+    claims_summary: "Marketed as private, chats never leave the device; MIT licence; first launch asks to opt in/out of anonymous analytics; Data Lake sharing is opt-in."
+    why: "Native Qt/C++ (not Electron): checks the tool outside the JavaScript world. Test the first-launch prompt both ways (opt-in run vs opt-out run)."
+    status: verified_claim
+    verify_at: https://www.nomic.ai/gpt4all
+
+  - slug: zed
+    name: Zed
+    tier: A
+    role: claim_test
+    stack: rust-native
+    homepage: https://zed.dev
+    repo_url: https://github.com/zed-industries/zed
+    exe_name: Zed.exe
+    first_party_domains: [zed.dev]
+    allowed_domains: [github.com, githubusercontent.com]
+    documents:
+      - {type: url, location: "https://zed.dev/docs/telemetry", role: privacy_policy}
+      - {type: url, location: "https://zed.dev/privacy", role: homepage}
+    claims_summary: "Marketing stresses no hidden tracking and a local-first architecture; docs disclose client-side diagnostics and metrics, on by default with switches, relayed through Zed's own servers to third-party vendors."
+    why: "Disclosed telemetry proxied through a FIRST-PARTY domain: tests first-party telemetry detection (no vendor domain to match) and the opt-out switches (telemetry.diagnostics / metrics)."
+    status: verified_claim
+    verify_at: https://zed.dev/docs/telemetry
+
+  - slug: syncthing
+    name: Syncthing
+    tier: A
+    role: control_positive
+    stack: go
+    homepage: https://syncthing.net
+    repo_url: https://github.com/syncthing/syncthing
+    exe_name: syncthing.exe
+    first_party_domains: [syncthing.net]
+    allowed_domains: [github.com]
+    claims_summary: "Anonymous usage reporting is opt-in (prompted); reports go to data.syncthing.net when enabled."
+    why: "Disclosed opt-in telemetry + heavy peer-to-peer traffic (discovery, relays): a hard case for false positives. Expect usage-report POSTs only when opted in."
+    status: verified_claim
+    verify_at: https://github.com/syncthing/syncthing
+
+  # ---------------- tier B: extend the benchmark after the pilot (verify claims yourself first) ----------------
+  - {slug: joplin, name: Joplin, tier: B, role: claim_test, stack: electron, homepage: https://joplinapp.org, repo_url: https://github.com/laurent22/joplin, exe_name: Joplin.exe, first_party_domains: [joplinapp.org], why: "Open-source notes app, local data with optional sync; check update checks and any usage stats.", status: to_verify, verify_at: https://joplinapp.org/privacy/}
+  - {slug: logseq, name: Logseq, tier: B, role: claim_test, stack: electron, homepage: https://logseq.com, repo_url: https://github.com/logseq/logseq, exe_name: Logseq.exe, first_party_domains: [logseq.com], why: "Privacy-first, local-first outliner; check analytics/crash SDKs in binary vs repo.", status: to_verify, verify_at: https://logseq.com}
+  - {slug: appflowy, name: AppFlowy, tier: B, role: claim_test, stack: flutter-rust, homepage: https://appflowy.com, repo_url: https://github.com/AppFlowy-IO/AppFlowy, exe_name: AppFlowy.exe, first_party_domains: [appflowy.io, appflowy.com], why: "Open-source Notion alternative marketed on privacy/data ownership; native (Flutter) stack.", status: to_verify, verify_at: https://appflowy.com}
+  - {slug: obsidian, name: Obsidian, tier: B, role: claim_test, stack: electron, homepage: https://obsidian.md, repo_url: "", exe_name: Obsidian.exe, first_party_domains: [obsidian.md], why: "Closed-source but local-first with privacy claims: no source comparison ('open_source' check is INCONCLUSIVE by design), behaviour-only test.", status: to_verify, verify_at: https://obsidian.md/privacy}
+  - {slug: element-desktop, name: Element Desktop, tier: B, role: claim_test, stack: electron, homepage: https://element.io, repo_url: https://github.com/element-hq/element-desktop, exe_name: Element.exe, first_party_domains: [element.io, matrix.org], why: "Privacy-oriented messenger; analytics/crash reporting are known to be configurable (check consent flow and Sentry/PostHog usage).", status: to_verify, verify_at: https://element.io/privacy}
+  - {slug: signal-desktop, name: Signal Desktop, tier: B, role: control_positive, stack: electron, homepage: https://signal.org, repo_url: https://github.com/signalapp/Signal-Desktop, exe_name: Signal.exe, first_party_domains: [signal.org, whispersystems.org], why: "Strong minimal-data stance: a good false-positive control for a messenger with lots of encrypted, pinned traffic.", status: to_verify, verify_at: https://signal.org/legal/}
+  - {slug: bitwarden-desktop, name: Bitwarden Desktop, tier: B, role: claim_test, stack: electron, homepage: https://bitwarden.com, repo_url: https://github.com/bitwarden/clients, exe_name: Bitwarden.exe, first_party_domains: [bitwarden.com, bitwarden.net], why: "Open-source password manager; check crash/error reporting and any analytics.", status: to_verify, verify_at: https://bitwarden.com/privacy/}
+  - {slug: keepassxc, name: KeePassXC, tier: B, role: control_positive, stack: qt, homepage: https://keepassxc.org, repo_url: https://github.com/keepassxreboot/keepassxc, exe_name: KeePassXC.exe, first_party_domains: [keepassxc.org], why: "Offline password manager: expected quiet (update check / favicon fetch only if enabled).", status: to_verify, verify_at: https://keepassxc.org}
+  - {slug: notesnook, name: Notesnook, tier: B, role: claim_test, stack: electron, homepage: https://notesnook.com, repo_url: https://github.com/streetwriters/notesnook, exe_name: Notesnook.exe, first_party_domains: [notesnook.com, streetwriters.co], why: "End-to-end-encrypted notes marketed on privacy; check telemetry toggle and crash reporting.", status: to_verify, verify_at: https://notesnook.com/privacy}
+  - {slug: anytype, name: Anytype, tier: B, role: claim_test, stack: electron, homepage: https://anytype.io, repo_url: https://github.com/anyproto/anytype-ts, exe_name: Anytype.exe, first_party_domains: [anytype.io, anytype.dev], why: "Local-first, encrypted workspace; check analytics/crash SDK evidence and opt-outs.", status: to_verify, verify_at: https://anytype.io/privacy}
+  - {slug: cherry-studio, name: Cherry Studio, tier: B, role: claim_test, stack: electron, homepage: https://www.cherry-ai.com, repo_url: https://github.com/CherryHQ/cherry-studio, exe_name: "Cherry Studio.exe", first_party_domains: [cherry-ai.com], why: "Popular local AI client (Electron): part of the fast-growing 'local AI app' category where privacy claims are central.", status: to_verify, verify_at: https://www.cherry-ai.com}
+  - {slug: cryptomator, name: Cryptomator, tier: B, role: control_positive, stack: java, homepage: https://cryptomator.org, repo_url: https://github.com/cryptomator/cryptomator, exe_name: Cryptomator.exe, first_party_domains: [cryptomator.org], why: "Java desktop app (non-JS, non-Qt): update check expected; a stack-diversity sample.", status: to_verify, verify_at: https://cryptomator.org/privacy/}

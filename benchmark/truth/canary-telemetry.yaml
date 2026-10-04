@@ -1,0 +1,14 @@
+# Canary run:  python -m claimcheck.canary --behaviour telemetry            (capture phase: idle)
+# Documents:   benchmark/canary_claims.md (README-like claims) + benchmark/canary_policy.md (policy: no third-party analytics)
+slug: canary
+scenario: telemetry
+expected:
+  no_telemetry: CONTRADICTED
+  no_third_party_sharing: CONTRADICTED
+  privacy_friendly: CONTRADICTED       # policy loaded and names no analytics vendor, yet PostHog/Sentry are contacted
+  policy_disclosure: CONTRADICTED
+  local_first: WARNING                 # outbound telemetry exists but carries no proven user content
+expected_hosts:
+  telemetry: [eu.i.posthog.com, o0.ingest.sentry.io]
+  benign: [api.canary-app.example]
+notes: "Vendor domains + payload shape + persistent id + periodic beacon."

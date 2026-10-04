@@ -1,0 +1,6 @@
+include LICENSE README.md CHANGELOG.md pyproject.toml
+recursive-include docs *.md
+graft apps
+recursive-include benchmark *.md *.yaml
+recursive-include tests *.py
+global-exclude *.pyc __pycache__ .DS_Store

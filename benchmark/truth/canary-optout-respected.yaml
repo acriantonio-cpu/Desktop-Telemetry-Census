@@ -1,0 +1,11 @@
+# Canary runs:  idle:   python -m claimcheck.canary --behaviour optout-respected --flag-file F      (F does not exist yet)
+#               optout: same command after creating the file F
+slug: canary
+scenario: optout-respected
+expected:
+  optout_effective: NOT_CONTRADICTED
+  no_telemetry: CONTRADICTED           # it DID send telemetry before the opt-out
+expected_hosts:
+  telemetry: [eu.i.posthog.com, o0.ingest.sentry.io]
+  benign: [api.canary-app.example]
+notes: "Well-behaved opt-out: telemetry stops after the switch. Must NOT be flagged by optout_effective."

@@ -1,0 +1,11 @@
+# Canary runs:  idle:   python -m claimcheck.canary --behaviour optout-ignored --flag-file F        (F does not exist yet)
+#               optout: same command after creating the file F  (simulated "user disabled telemetry")
+slug: canary
+scenario: optout-ignored
+expected:
+  optout_effective: CONTRADICTED
+  no_telemetry: CONTRADICTED
+expected_hosts:
+  telemetry: [eu.i.posthog.com, o0.ingest.sentry.io]
+  benign: [api.canary-app.example]
+notes: "Telemetry persists in the opt-out phase (the privacy-washing case)."

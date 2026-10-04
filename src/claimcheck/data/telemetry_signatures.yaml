@@ -1,0 +1,335 @@
+# Bundled signatures of well-known telemetry / analytics / crash-reporting / session-replay vendors.
+# Used by: static scan (packages, file names, strings), classify (domains), claims (policy_names).
+# Add your own with manifest `static.extra_signatures: [file.yaml]` (same format, merged by id).
+# category: analytics | crash_reporting | session_replay | apm | ad_tracking | os_telemetry
+version: 1
+vendors:
+  - id: sentry
+    name: Sentry
+    category: crash_reporting
+    policy_names: ["Sentry"]
+    domains: [sentry.io, ingest.sentry.io]
+    packages:
+      npm: ["@sentry/*", "raven-js", "raven"]
+      pypi: ["sentry-sdk", "raven"]
+      cargo: ["sentry", "sentry-*"]
+      go: ["github.com/getsentry/sentry-go*"]
+      nuget: ["Sentry", "Sentry.*"]
+    file_names: ["Sentry*.dll", "sentry*.dll"]
+    strings: ["@sentry/", "sentry_sdk", "sentry-native", "ingest.sentry.io"]
+
+  - id: posthog
+    name: PostHog
+    category: analytics
+    policy_names: ["PostHog"]
+    domains: [posthog.com, i.posthog.com, us.i.posthog.com, eu.i.posthog.com, app.posthog.com]
+    packages:
+      npm: ["posthog-js", "posthog-node", "posthog-react-native", "posthog-electron"]
+      pypi: ["posthog"]
+      cargo: ["posthog-rs", "posthog-*"]
+      go: ["github.com/posthog/posthog-go*"]
+    strings: ["posthog-js", "posthog-node", "i.posthog.com"]
+
+  - id: mixpanel
+    name: Mixpanel
+    category: analytics
+    policy_names: ["Mixpanel"]
+    domains: [mixpanel.com, api.mixpanel.com, api-eu.mixpanel.com]
+    packages:
+      npm: ["mixpanel", "mixpanel-browser", "mixpanel-react-native"]
+      pypi: ["mixpanel"]
+      nuget: ["mixpanel-csharp", "Mixpanel*"]
+    strings: ["api.mixpanel.com", "mixpanel-browser"]
+
+  - id: amplitude
+    name: Amplitude
+    category: analytics
+    policy_names: ["Amplitude"]
+    domains: [amplitude.com, api.amplitude.com, api2.amplitude.com, api.eu.amplitude.com]
+    packages:
+      npm: ["@amplitude/*", "amplitude-js"]
+      pypi: ["amplitude-analytics"]
+    strings: ["api.amplitude.com", "api2.amplitude.com", "@amplitude/"]
+
+  - id: segment
+    name: Segment
+    category: analytics
+    policy_names: ["Segment.io", "Twilio Segment", "Segment.com"]
+    domains: [segment.io, segment.com, api.segment.io, cdn.segment.com]
+    packages:
+      npm: ["analytics-node", "@segment/*", "analytics-next"]
+      pypi: ["analytics-python", "segment-analytics-python"]
+      nuget: ["Segment.Analytics*"]
+    strings: ["api.segment.io", "@segment/analytics"]
+
+  - id: google_analytics
+    name: Google Analytics
+    category: analytics
+    policy_names: ["Google Analytics", "Google Tag Manager"]
+    domains: [google-analytics.com, analytics.google.com, googletagmanager.com, ssl.google-analytics.com, region1.google-analytics.com]
+    packages:
+      npm: ["react-ga", "react-ga4", "universal-analytics", "ga-4-react", "@analytics/google-analytics", "electron-google-analytics*", "node-ga"]
+    strings: ["google-analytics.com/g/collect", "google-analytics.com/mp/collect", "google-analytics.com/collect", "googletagmanager.com/gtag"]
+
+  - id: firebase_analytics
+    name: Firebase Analytics / Crashlytics
+    category: analytics
+    policy_names: ["Firebase Analytics", "Firebase Crashlytics", "Crashlytics", "Firebase"]
+    domains: [app-measurement.com, firebaselogging-pa.googleapis.com, crashlytics.com, firebase-settings.crashlytics.com]
+    packages:
+      npm: ["@firebase/analytics", "firebase-analytics"]
+    strings: ["app-measurement.com", "firebaselogging-pa.googleapis.com", "firebase-settings.crashlytics.com"]
+
+  - id: bugsnag
+    name: Bugsnag
+    category: crash_reporting
+    policy_names: ["Bugsnag"]
+    domains: [bugsnag.com, notify.bugsnag.com, sessions.bugsnag.com]
+    packages:
+      npm: ["@bugsnag/*", "bugsnag-js"]
+      pypi: ["bugsnag"]
+      nuget: ["Bugsnag*"]
+    strings: ["notify.bugsnag.com", "sessions.bugsnag.com", "@bugsnag/"]
+
+  - id: datadog
+    name: Datadog
+    category: apm
+    policy_names: ["Datadog"]
+    domains: [datadoghq.com, datadoghq.eu, browser-intake-datadoghq.com]
+    packages:
+      npm: ["@datadog/*", "dd-trace", "datadog-*"]
+      pypi: ["ddtrace", "datadog"]
+      go: ["github.com/DataDog/*"]
+      nuget: ["Datadog.*"]
+    strings: ["browser-intake-datadoghq.com", "datadoghq.com/api", "@datadog/browser"]
+
+  - id: appcenter
+    name: Microsoft App Center
+    category: analytics
+    policy_names: ["App Center", "AppCenter"]
+    domains: [appcenter.ms, in.appcenter.ms, api.appcenter.ms]
+    packages:
+      npm: ["appcenter", "appcenter-analytics", "appcenter-crashes"]
+      nuget: ["Microsoft.AppCenter*"]
+    file_names: ["Microsoft.AppCenter*.dll"]
+    strings: ["in.appcenter.ms", "Microsoft.AppCenter"]
+
+  - id: appinsights
+    name: Microsoft Application Insights
+    category: apm
+    policy_names: ["Application Insights", "Azure Monitor"]
+    domains: [dc.services.visualstudio.com, in.applicationinsights.azure.com, applicationinsights.azure.com]
+    packages:
+      npm: ["applicationinsights", "@microsoft/applicationinsights-*", "@vscode/extension-telemetry", "vscode-extension-telemetry"]
+      pypi: ["applicationinsights", "opencensus-ext-azure", "azure-monitor-opentelemetry"]
+      nuget: ["Microsoft.ApplicationInsights*"]
+    file_names: ["Microsoft.ApplicationInsights*.dll"]
+    strings: ["dc.services.visualstudio.com", "applicationinsights.azure.com", "@vscode/extension-telemetry"]
+
+  - id: microsoft_telemetry
+    name: Microsoft diagnostic data endpoints
+    category: os_telemetry
+    policy_names: ["Microsoft diagnostic", "Microsoft telemetry"]
+    domains: [vortex.data.microsoft.com, watson.telemetry.microsoft.com, telemetry.microsoft.com, events.data.microsoft.com, mobile.events.data.microsoft.com, browser.events.data.microsoft.com, settings-win.data.microsoft.com]
+    strings: ["vortex.data.microsoft.com", "mobile.events.data.microsoft.com", "browser.events.data.microsoft.com"]
+
+  - id: plausible
+    name: Plausible
+    category: analytics
+    policy_names: ["Plausible"]
+    domains: [plausible.io]
+    packages:
+      npm: ["plausible-tracker", "@plausible-analytics/tracker"]
+    strings: ["plausible.io/api/event"]
+
+  - id: matomo
+    name: Matomo (Piwik)
+    category: analytics
+    policy_names: ["Matomo", "Piwik"]
+    domains: [matomo.cloud]
+    packages:
+      npm: ["matomo-tracker", "@datapunt/matomo-tracker-js", "@jonkoops/matomo-tracker"]
+    strings: ["matomo.php", "piwik.php"]
+
+  - id: heap
+    name: Heap
+    category: analytics
+    policy_names: ["Heap Analytics"]
+    domains: [heapanalytics.com]
+    strings: ["heapanalytics.com"]
+
+  - id: hotjar
+    name: Hotjar
+    category: session_replay
+    policy_names: ["Hotjar"]
+    domains: [hotjar.com, hotjar.io]
+    packages:
+      npm: ["@hotjar/browser", "react-hotjar"]
+    strings: ["static.hotjar.com"]
+
+  - id: fullstory
+    name: FullStory
+    category: session_replay
+    policy_names: ["FullStory"]
+    domains: [fullstory.com]
+    packages:
+      npm: ["@fullstory/browser"]
+    strings: ["edge.fullstory.com"]
+
+  - id: logrocket
+    name: LogRocket
+    category: session_replay
+    policy_names: ["LogRocket"]
+    domains: [logrocket.com, lr-ingest.io]
+    packages:
+      npm: ["logrocket"]
+    strings: ["lr-ingest.io"]
+
+  - id: rollbar
+    name: Rollbar
+    category: crash_reporting
+    policy_names: ["Rollbar"]
+    domains: [rollbar.com]
+    packages:
+      npm: ["rollbar"]
+      pypi: ["rollbar"]
+    strings: ["api.rollbar.com"]
+
+  - id: raygun
+    name: Raygun
+    category: crash_reporting
+    policy_names: ["Raygun"]
+    domains: [raygun.com, raygun.io]
+    packages:
+      npm: ["raygun4js", "raygun"]
+      nuget: ["Mindscape.Raygun4Net*"]
+    strings: ["api.raygun.io"]
+
+  - id: countly
+    name: Countly
+    category: analytics
+    policy_names: ["Countly"]
+    domains: [count.ly]
+    packages:
+      npm: ["countly-sdk-web", "countly-sdk-nodejs", "countly-sdk-react-native-bridge"]
+
+  - id: newrelic
+    name: New Relic
+    category: apm
+    policy_names: ["New Relic"]
+    domains: [newrelic.com, nr-data.net]
+    packages:
+      npm: ["newrelic", "@newrelic/*"]
+      pypi: ["newrelic"]
+      nuget: ["NewRelic.*"]
+    strings: ["nr-data.net", "bam.nr-data.net"]
+
+  - id: rudderstack
+    name: RudderStack
+    category: analytics
+    policy_names: ["RudderStack", "Rudderstack"]
+    domains: [rudderstack.com, rudderlabs.com]
+    packages:
+      npm: ["@rudderstack/*", "rudder-sdk-js", "rudder-sdk-node"]
+
+  - id: statsig
+    name: Statsig
+    category: analytics
+    policy_names: ["Statsig"]
+    domains: [statsig.com, featuregates.org, statsigapi.net]
+    packages:
+      npm: ["statsig-js", "statsig-node", "@statsig/*"]
+      pypi: ["statsig"]
+
+  - id: snowplow
+    name: Snowplow
+    category: analytics
+    policy_names: ["Snowplow"]
+    domains: [snowplowanalytics.com]
+    packages:
+      npm: ["@snowplow/*", "snowplow-tracker"]
+
+  - id: google_ads
+    name: Google advertising (DoubleClick/AdSense)
+    category: ad_tracking
+    policy_names: ["DoubleClick", "Google Ads", "AdSense"]
+    domains: [doubleclick.net, googlesyndication.com, googleadservices.com]
+    strings: ["googlesyndication.com", "doubleclick.net"]
+
+  - id: mozilla_telemetry
+    name: Mozilla telemetry
+    category: analytics
+    policy_names: ["Mozilla telemetry"]
+    domains: [telemetry.mozilla.org, incoming.telemetry.mozilla.org]
+    strings: ["incoming.telemetry.mozilla.org"]
+
+  - id: opentelemetry
+    name: "OpenTelemetry exporters (may be local-only, verify the endpoint)"
+    category: apm
+    policy_names: ["OpenTelemetry"]
+    packages:
+      npm: ["@opentelemetry/exporter-*"]
+      pypi: ["opentelemetry-exporter-*"]
+      cargo: ["opentelemetry-otlp", "opentelemetry-jaeger", "opentelemetry-zipkin"]
+    strings: ["otlp/v1/traces", "v1/traces"]
+
+  - id: electron_crashreporter
+    name: Electron crashReporter
+    category: crash_reporting
+    policy_names: ["crash report"]
+    strings: ["crashReporter.start"]
+
+  # ---- added in 0.2.0 (recall) ----
+  - id: clarity
+    name: Microsoft Clarity
+    category: session_replay
+    policy_names: ["Microsoft Clarity"]
+    domains: ["clarity.ms"]
+    packages:
+      npm: ["@microsoft/clarity"]
+    strings: ["clarity.ms/tag"]
+
+  - id: cloudflare_web_analytics
+    name: Cloudflare Web Analytics
+    category: analytics
+    policy_names: ["Cloudflare Web Analytics"]
+    domains: ["cloudflareinsights.com"]
+    strings: ["static.cloudflareinsights.com"]
+
+  - id: umami
+    name: Umami
+    category: analytics
+    policy_names: ["Umami"]
+    domains: ["umami.is"]
+    strings: ["cloud.umami.is"]
+
+  - id: fathom
+    name: Fathom Analytics
+    category: analytics
+    policy_names: ["Fathom Analytics"]
+    domains: ["usefathom.com"]
+    packages:
+      npm: ["fathom-client"]
+
+  - id: pendo
+    name: Pendo
+    category: analytics
+    policy_names: ["Pendo"]
+    domains: ["pendo.io"]
+    strings: ["cdn.pendo.io"]
+
+  - id: launchdarkly
+    name: LaunchDarkly
+    category: analytics
+    policy_names: ["LaunchDarkly"]
+    domains: ["launchdarkly.com"]
+    packages:
+      npm: ["launchdarkly-js-client-sdk", "launchdarkly-electron-client-sdk"]
+
+  - id: honeycomb
+    name: Honeycomb
+    category: apm
+    policy_names: ["Honeycomb"]
+    domains: ["honeycomb.io"]
+    packages:
+      npm: ["honeycomb-beeline", "@honeycombio/*"]

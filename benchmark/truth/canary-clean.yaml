@@ -1,0 +1,13 @@
+# Canary run:  python -m claimcheck.canary --behaviour clean                (capture phase: idle)
+slug: canary
+scenario: clean
+expected:
+  no_telemetry: NOT_CONTRADICTED
+  no_third_party_sharing: NOT_CONTRADICTED
+  privacy_friendly: NOT_CONTRADICTED
+  policy_disclosure: NOT_CONTRADICTED
+  local_first: NOT_CONTRADICTED
+expected_hosts:
+  telemetry: []
+  benign: [api.canary-app.example]
+notes: "Only first-party polling: a correct tool must stay quiet (false-positive control)."
